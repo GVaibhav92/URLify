@@ -1,0 +1,36 @@
+# Go build files
+bin/
+dist/
+build/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+
+# Go coverage
+coverage.out
+
+# Dependency directories
+vendor/
+
+# Environment variables
+.env
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Docker
+docker-data/
