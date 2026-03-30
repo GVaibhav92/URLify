@@ -64,6 +64,7 @@ func Load() *Config {
 	}
 }
 
+// read env variable with default value
 func getEnv(key, fallback string) string {
 	if val := os.Getenv(key); val != "" {
 		return val

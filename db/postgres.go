@@ -10,6 +10,7 @@ import (
 	"GoSnip/config"
 )
 
+// dependency factory
 func NewPostgres(cfg *config.Config) *sqlx.DB {
 	dsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
