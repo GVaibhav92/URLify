@@ -7,7 +7,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 
-	"GoSnip/config"
+	"URLify/config"
 )
 
 // dependency factory

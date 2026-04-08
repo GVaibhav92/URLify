@@ -7,9 +7,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"GoSnip/config"
-	"GoSnip/models"
-	"GoSnip/utils"
+	"URLify/config"
+	"URLify/models"
+	"URLify/utils"
 )
 
 type AuthHandler struct {

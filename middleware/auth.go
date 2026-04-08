@@ -6,8 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"GoSnip/config"
-	"GoSnip/utils"
+	"URLify/config"
+	"URLify/utils"
 )
 
 func AuthMiddleware(cfg *config.Config) gin.HandlerFunc {

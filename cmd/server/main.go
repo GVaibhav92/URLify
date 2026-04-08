@@ -5,9 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"GoSnip/config"
-	"GoSnip/db"
-	"GoSnip/routes"
+	"URLify/config"
+	"URLify/db"
+	"URLify/routes"
 )
 
 func main() {
@@ -19,13 +19,11 @@ func main() {
 	redisClient := db.NewRedis(cfg)
 	defer redisClient.Close()
 
-	_ = redisClient // will be used from Phase 3 onwards
-
 	r := gin.Default()
 
-	routes.Setup(r, pgDB, cfg)
+	routes.Setup(r, pgDB, redisClient, cfg)
 
-	log.Printf("GoSnip running on port %s", cfg.AppPort)
+	log.Printf("✓ URLify running on port %s", cfg.AppPort)
 
 	if err := r.Run(":" + cfg.AppPort); err != nil {
 		log.Fatalf("Server failed: %v", err)

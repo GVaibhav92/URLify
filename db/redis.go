@@ -7,7 +7,7 @@ import (
 
 	"github.com/redis/go-redis/v9"
 
-	"GoSnip/config"
+	"URLify/config"
 )
 
 func NewRedis(cfg *config.Config) *redis.Client {
