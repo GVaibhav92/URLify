@@ -8,14 +8,21 @@ import (
 	"URLify/config"
 	"URLify/middleware"
 	"URLify/models"
+	"URLify/services"
 )
 
 func Setup(r *gin.Engine, db *sqlx.DB, rdb *redis.Client, cfg *config.Config) {
+	//Stores
 	userStore := models.NewUserStore(db)
 	urlStore := models.NewURLStore(db)
 
+	//Services
+	redirectService := services.NewRedirectService(urlStore, rdb)
+
+	//Handlers
 	authHandler := NewAuthHandler(userStore, cfg)
-	urlHandler := NewURLHandler(urlStore, rdb)
+	urlHandler := NewURLHandler(urlStore, rdb, redirectService)
+	redirectHandler := NewRedirectHandler(redirectService)
 
 	// Public routes
 	auth := r.Group("/auth")
@@ -23,6 +30,7 @@ func Setup(r *gin.Engine, db *sqlx.DB, rdb *redis.Client, cfg *config.Config) {
 		auth.POST("/signup", authHandler.Signup)
 		auth.POST("/login", authHandler.Login)
 	}
+	r.GET("/r/:shortcode", redirectHandler.Redirect)
 
 	// Protected routes
 	protected := r.Group("/")

@@ -15,7 +15,7 @@ services:
       - pgdata:/var/lib/postgresql/data
 
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U urlify"]
+      test: ["CMD-SHELL", "pg_isready -U urlify -d urlify_db"]
       interval: 10s
       timeout: 5s
       retries: 5

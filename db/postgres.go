@@ -21,7 +21,7 @@ func NewPostgres(cfg *config.Config) *sqlx.DB {
 		cfg.DBName,
 		cfg.DBSSLMode,
 	)
-
+	log.Println("DB Name from config:", cfg.DBName)
 	db, err := sqlx.Connect("postgres", dsn)
 	if err != nil {
 		log.Fatalf("PostgreSQL connection failed!: %v", err)

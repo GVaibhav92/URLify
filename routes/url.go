@@ -11,20 +11,23 @@ import (
 	"github.com/redis/go-redis/v9"
 
 	"URLify/models"
+	"URLify/services"
 	"URLify/utils"
 )
 
 // encapsulates dependencies for URL‑related HTTP handlers.
 type URLHandler struct {
-	urlStore *models.URLStore
-	redis    *redis.Client
+	urlStore        *models.URLStore
+	redis           *redis.Client
+	redirectService *services.RedirectService
 }
 
 // used in the router setup to bind routes to handler methods.
-func NewURLHandler(urlStore *models.URLStore, redis *redis.Client) *URLHandler {
+func NewURLHandler(urlStore *models.URLStore, redis *redis.Client, redirectService *services.RedirectService) *URLHandler {
 	return &URLHandler{
-		urlStore: urlStore,
-		redis:    redis,
+		urlStore:        urlStore,
+		redis:           redis,
+		redirectService: redirectService,
 	}
 }
 
@@ -192,6 +195,9 @@ func (h *URLHandler) DeleteURL(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete URL"})
 		return
 	}
+
+	//Invalidate Redis cache
+	_ = h.redirectService.InvalidateCache(c.Request.Context(), existing.ShortCode)
 
 	c.JSON(http.StatusOK, gin.H{"message": "URL deleted successfully"})
 }
