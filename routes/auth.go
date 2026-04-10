@@ -24,7 +24,7 @@ func NewAuthHandler(userStore *models.UserStore, cfg *config.Config) *AuthHandle
 	}
 }
 
-// ── Request body structs ──────────────────────────────────────────────────────
+// Request body structs
 
 type signupRequest struct {
 	Email    string `json:"email"    validate:"required,email"`
@@ -36,7 +36,7 @@ type loginRequest struct {
 	Password string `json:"password" validate:"required"`
 }
 
-// ── Handlers ──────────────────────────────────────────────────────────────────
+// Handlers
 
 func (h *AuthHandler) Signup(c *gin.Context) {
 	var req signupRequest
@@ -106,7 +106,6 @@ func (h *AuthHandler) Login(c *gin.Context) {
 
 	user, err := h.userStore.GetByEmail(req.Email)
 	if err != nil {
-		// Intentionally vague — don't reveal whether email exists
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email or password"})
 		return
 	}

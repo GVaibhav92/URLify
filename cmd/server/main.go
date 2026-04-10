@@ -23,7 +23,7 @@ func main() {
 
 	routes.Setup(r, pgDB, redisClient, cfg)
 
-	log.Printf("✓ URLify running on port %s", cfg.AppPort)
+	log.Printf("URLify running on port %s", cfg.AppPort)
 
 	if err := r.Run(":" + cfg.AppPort); err != nil {
 		log.Fatalf("Server failed: %v", err)

@@ -36,7 +36,6 @@ func (h *RedirectHandler) Redirect(c *gin.Context) {
 		return
 	}
 
-	// Set header so we can observe cache behavior in Postman
 	if fromCache {
 		c.Header("X-Cache", "HIT")
 	} else {

@@ -24,6 +24,9 @@ func Setup(r *gin.Engine, db *sqlx.DB, rdb *redis.Client, cfg *config.Config) {
 	urlHandler := NewURLHandler(urlStore, rdb, redirectService)
 	redirectHandler := NewRedirectHandler(redirectService)
 
+	// Global
+	r.Use(middleware.RateLimiter(rdb, cfg))
+
 	// Public routes
 	auth := r.Group("/auth")
 	{
