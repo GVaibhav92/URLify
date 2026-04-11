@@ -73,6 +73,18 @@ func (s *URLStore) Create(originalURL, shortCode string, userID uuid.UUID, isCus
 	return url, nil
 }
 
+func (s *URLStore) GetAllURLs() ([]URL, error) {
+	urls := []URL{}
+
+	query := `SELECT * FROM urls`
+
+	err := s.db.Select(&urls, query)
+	if err != nil {
+		return nil, err
+	}
+
+	return urls, nil
+}
 func (s *URLStore) GetByUserID(userID uuid.UUID, limit, offset int) ([]URLWithMetrics, error) {
 	urls := []URLWithMetrics{}
 
