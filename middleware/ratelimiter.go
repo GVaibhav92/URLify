@@ -10,6 +10,7 @@ import (
 	"github.com/redis/go-redis/v9"
 
 	"URLify/config"
+	"URLify/metrics"
 )
 
 //Lua script implements atomic token bucket refill + consume.
@@ -94,6 +95,8 @@ func RateLimiter(rdb *redis.Client, cfg *config.Config) gin.HandlerFunc {
 		c.Header("X-Ratelimit-Refill-Rate", strconv.Itoa(cfg.RateLimitRefillRate))
 
 		if allowed == 0 {
+			metrics.RateLimitedRequests.Inc()
+
 			c.AbortWithStatusJSON(http.StatusTooManyRequests, gin.H{
 				"error":               "Rate limit exceeded",
 				"retry_after_seconds": cfg.RateLimitCapacity / cfg.RateLimitRefillRate,

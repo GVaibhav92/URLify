@@ -2,8 +2,8 @@ import http from 'k6/http';
 
 export const options = {
 
-    vus: 10,
-    duration: '1s',
+    vus: 20,
+    duration: '10s',
     // use iterations: 10 for better simulation of atomicity
 
 };

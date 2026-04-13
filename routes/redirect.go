@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"URLify/metrics"
 	"URLify/services"
 )
 
@@ -38,9 +39,12 @@ func (h *RedirectHandler) Redirect(c *gin.Context) {
 
 	if fromCache {
 		c.Header("X-Cache", "HIT")
+		metrics.RedirectCacheHits.Inc()
 	} else {
 		c.Header("X-Cache", "MISS")
+		metrics.RedirectCacheMisses.Inc()
 	}
+	metrics.RedirectsTotal.Inc()
 
 	c.Redirect(http.StatusMovedPermanently, originalURL)
 }

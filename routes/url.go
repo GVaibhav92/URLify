@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"
 
+	"URLify/metrics"
 	"URLify/models"
 	"URLify/services"
 	"URLify/utils"
@@ -110,6 +111,10 @@ func (h *URLHandler) CreateURL(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create URL"})
 		return
 	}
+
+	metrics.URLsCreatedTotal.Inc()
+	metrics.ActiveURLsGauge.Inc()
+
 	c.JSON(http.StatusCreated, gin.H{
 		"message":      "URL created successfully",
 		"id":           url.ID,
@@ -195,6 +200,9 @@ func (h *URLHandler) DeleteURL(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete URL"})
 		return
 	}
+
+	metrics.URLsDeletedTotal.Inc()
+	metrics.ActiveURLsGauge.Inc()
 
 	//Invalidate Redis cache
 	_ = h.redirectService.InvalidateCache(c.Request.Context(), existing.ShortCode)

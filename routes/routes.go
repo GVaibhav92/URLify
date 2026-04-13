@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/redis/go-redis/v9"
 
 	"URLify/config"
@@ -23,6 +24,7 @@ func Setup(r *gin.Engine, db *sqlx.DB, rdb *redis.Client, cfg *config.Config) {
 	authHandler := NewAuthHandler(userStore, cfg)
 	urlHandler := NewURLHandler(urlStore, rdb, redirectService)
 	redirectHandler := NewRedirectHandler(redirectService)
+	metricsHandler := NewMetricsHandler(db)
 
 	// Global
 	r.Use(middleware.RateLimiter(rdb, cfg))
@@ -34,6 +36,8 @@ func Setup(r *gin.Engine, db *sqlx.DB, rdb *redis.Client, cfg *config.Config) {
 		auth.POST("/login", authHandler.Login)
 	}
 	r.GET("/r/:shortcode", redirectHandler.Redirect)
+	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
+	r.GET("/stats", metricsHandler.GetStats)
 
 	// Protected routes
 	protected := r.Group("/")

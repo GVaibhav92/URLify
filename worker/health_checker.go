@@ -10,6 +10,7 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	"URLify/config"
+	"URLify/metrics"
 	"URLify/models"
 )
 
@@ -24,6 +25,7 @@ const (
 type job struct {
 	urlID       string
 	originalURL string
+	shortCode   string
 }
 
 // HealthChecker
@@ -79,6 +81,13 @@ func (h *HealthChecker) Start(ctx context.Context) {
 
 // runCycle fetches all URLs and dispatches them to the worker pool via channel
 func (h *HealthChecker) runCycle(ctx context.Context) {
+	cycleStart := time.Now()
+	defer func() {
+		metrics.HealthCheckCyclesTotal.Inc()
+		metrics.HealthCheckDuration.Observe(time.Since(cycleStart).Seconds())
+
+	}()
+
 	urls, err := h.urlStore.GetAllURLs()
 	if err != nil {
 		log.Printf("Health checker: failed to fetch URLs: %v", err)
@@ -111,6 +120,7 @@ func (h *HealthChecker) runCycle(ctx context.Context) {
 		jobs <- job{
 			urlID:       u.ID.String(),
 			originalURL: u.OriginalURL,
+			shortCode:   u.ShortCode,
 		}
 	}
 
@@ -135,7 +145,7 @@ func (h *HealthChecker) worker(ctx context.Context, jobs <-chan job) {
 		}
 
 		status := h.checkURL(ctx, j.originalURL)
-		h.updateMetrics(j.urlID, status)
+		h.updateMetrics(j.urlID, j.shortCode, status)
 	}
 }
 
@@ -169,7 +179,7 @@ func (h *HealthChecker) checkURL(ctx context.Context, rawURL string) string {
 }
 
 // updateMetrics writes the check result to url_metrics and adjusts the uptime percentage
-func (h *HealthChecker) updateMetrics(urlID, status string) {
+func (h *HealthChecker) updateMetrics(urlID, shortCode, status string) {
 	query := `
 		UPDATE url_metrics
 		SET
@@ -186,4 +196,11 @@ func (h *HealthChecker) updateMetrics(urlID, status string) {
 	if _, err := h.db.Exec(query, status, urlID); err != nil {
 		log.Printf("Health checker: failed to update metrics for %s: %v", urlID, err)
 	}
+
+	//update prometheus gauge
+	val := 0.0
+	if status == StatusUP {
+		val = 1.0
+	}
+	metrics.URLStatusGauge.WithLabelValues(shortCode).Set(val)
 }
