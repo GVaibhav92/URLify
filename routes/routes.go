@@ -27,7 +27,10 @@ func Setup(r *gin.Engine, db *sqlx.DB, rdb *redis.Client, cfg *config.Config) {
 	metricsHandler := NewMetricsHandler(db)
 
 	// Global
-	r.Use(middleware.RateLimiter(rdb, cfg))
+	r.Use(
+		middleware.Logger(),
+		middleware.RateLimiter(rdb, cfg),
+	)
 
 	// Public routes
 	auth := r.Group("/auth")
