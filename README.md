@@ -551,6 +551,8 @@ docker compose down -v
 
 This project demonstrates production-ready patterns but is configured for local development.
 
+The system is fully containerized using Docker Compose and can be deployed to any cloud platform supporting container workloads (Render, AWS, GCP, Azure).
+
 Recommended changes for production:
 
 - Use secure secrets management (Vault / AWS Secrets Manager)
