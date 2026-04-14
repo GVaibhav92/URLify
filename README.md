@@ -11,6 +11,16 @@ real backend engineering patterns used in production systems.
 [![Docker](https://img.shields.io/badge/Docker-Compose-blue)](https://docker.com)
 
 ---
+## Key Features
+
+- High-performance URL redirection using Redis cache-aside pattern
+- Distributed rate limiting using Redis Lua scripts
+- JWT-based authentication and authorization
+- Background health monitoring worker pool
+- Full observability stack (Prometheus + Grafana)
+- Containerized deployment with Docker Compose
+- Production-ready graceful shutdown handling
+- Load-tested using k6
 
 ## What This Project Demonstrates
 
@@ -24,6 +34,29 @@ real backend engineering patterns used in production systems.
 | Production containerization | Multi-stage Docker build (~15MB image) |
 | Relational modeling | PostgreSQL with connection pooling via sqlx |
 | JWT authentication | HS256 signed tokens with bcrypt password hashing |
+
+---
+## Tech Stack
+
+Backend:
+- Go (Gin)
+- PostgreSQL
+- Redis
+
+Infrastructure:
+- Docker
+- Docker Compose
+
+Observability:
+- Prometheus
+- Grafana
+
+Testing:
+- k6 (load testing)
+
+Security:
+- JWT authentication
+- bcrypt password hashing
 
 ---
 
@@ -141,7 +174,7 @@ On first request for any shortcode, PostgreSQL is queried once
 and the result is cached in Redis for 24 hours. Every subsequent
 request is served entirely from Redis at sub-millisecond latency.
 
-Cache invalidation is handled on URL deletion — the Redis key is
+**Cache invalidation** is handled on URL deletion — the Redis key is
 removed immediately so deleted URLs stop resolving within the
 same request cycle.
 
@@ -208,12 +241,12 @@ X-RateLimit-Refill-Rate: 1
 | `urlify_health_check_cycles_total` | Counter | — | Completed worker cycles |
 | `urlify_health_check_duration_seconds` | Histogram | — | Worker cycle duration |
 
-###  Live Grafana Dashboard Snapshot
+### Live Grafana Dashboard Snapshot
 
 You can view the production monitoring dashboard here:
 
 🔗 **Public Snapshot:**
-https://snapshots.raintank.io/dashboard/snapshot/bLUyVnrB0cwEZwQTWh8RRaXq8jVQp4I8
+https://snapshots.raintank.io/dashboard/snapshot/Q2iG099Sq3ky6Fx9DjoSM51p2JoU3VQx
 
 This dashboard visualizes:
 
@@ -230,10 +263,10 @@ The system was load tested using **k6**, and metrics were collected via **Promet
 
 | Metric | Visualization |
 |--------|--------------|
-| Request Rate (RPS) | ![](screenshots/rps.png) |
-| Cache Hit Ratio | ![](screenshots/cache-hit-ratio.png) |
-| P99 Latency | ![](screenshots/latency.png) |
-| URL Health Status | ![](screenshots/health_status.png) |
+| Request Rate (RPS) | ![RPS Dashboard](screenshots/rps.png) |
+| Cache Hit Ratio | ![Cache Hit Ratio](screenshots/cache-hit-ratio.png) |
+| P99 Latency | ![P99 Latency](screenshots/latency.png) |
+| URL Health Status | ![URL Health Status](screenshots/health_status.png) |
 
 Key PromQL queries used:
 
@@ -334,11 +367,13 @@ docker compose up --build
 
 | Service | URL |
 |---|---|
-| urlify API | http://localhost:8080 |
+| URLify API | http://localhost:8080 |
 | Prometheus | http://localhost:9090 |
 | Grafana | http://localhost:3000 |
 
-Grafana credentials: `admin` / `urlify123`
+Grafana credentials are defined in the `.env` file.
+
+⚠️ Never commit real credentials to source control.
 
 Dashboard is auto-provisioned — navigate to
 **Dashboards → urlify → urlify Production Dashboard**.
@@ -363,11 +398,37 @@ go run cmd/server/main.go
 k6 run k6/load_test.js
 ```
 
-k6 stages: 10 VU ramp → 30 VU sustained → 50 VU spike → ramp down.
 Watch all 11 Grafana panels respond live during the test.
 
 ---
+## Performance Characteristics
 
+Environment:
+
+* Local development machine
+* Docker Compose deployment
+* Go + Redis + PostgreSQL + Prometheus + Grafana
+
+Load test configuration:
+
+* Tool: k6
+* Peak load: 50 virtual users
+* Test duration: ~3 minutes
+* Target endpoint: redirect service
+
+Results:
+
+* Throughput: ~376 requests/sec
+* P99 latency: ~9.83 ms
+* Cache hit ratio: 99.8%
+* Error rate: < 1%
+
+Note:
+
+During benchmarking, rate limits were temporarily increased to measure system throughput without artificial throttling.
+With default rate limits enabled, the system correctly enforced request limits under load.
+
+---
 ## Project Structure
 
 ```
@@ -385,8 +446,13 @@ urlify/
 │       │   └── dashboard.yml       Dashboard provider config
 │       └── datasources/
 │           └── prometheus.yml      Auto-wired Prometheus datasource
-├── k6/
+├── k6-test/
 │   └── load_test.js                Staged load test with setup/teardown
+    └── redirect_benchmark.js       Staged load test to measure performance 
+    └── test1_headers.js
+    └── test2_exhaust_bucket.js
+    └── test3_refill.js
+    └── test4_atomicity.js
 ├── metrics/
 │   └── metrics.go                  All Prometheus metric definitions
 ├── middleware/
@@ -466,6 +532,20 @@ To reset everything:
 ```bash
 docker compose down -v
 ```
+
+---
+## Production Considerations
+
+This project demonstrates production-ready patterns but is configured for local development.
+
+Recommended changes for production:
+
+- Use secure secrets management (Vault / AWS Secrets Manager)
+- Enable HTTPS (TLS termination via reverse proxy)
+- Configure persistent backups for PostgreSQL
+- Set strong passwords for all services
+- Enable authentication for Prometheus and Grafana
+- Configure horizontal scaling behind a load balancer
 
 ---
 

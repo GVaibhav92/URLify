@@ -3,7 +3,7 @@ import { check, sleep } from 'k6';
 
 const BASE_URL = 'http://localhost:8080';
 
-const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMDNlZDU0NGYtOTgyYy00ZGIwLWJjNWEtODM2MTRmNGNmNmQxIiwicm9sZSI6ImZyZWUiLCJleHAiOjE3NzYyMzMzNTIsImlhdCI6MTc3NjE0Njk1Mn0.9zSoP8Cw7arsXBZONQ9gc3gry5xN9xbAjsxWXdYhafA';
+const TOKEN = '';
 
 const SHORT_CODES = [];
 
@@ -17,7 +17,7 @@ export const options = {
   ],
   thresholds: {
     http_req_duration: ['p(95)<500'],   // 95% of requests under 500ms
-    http_req_failed:   ['rate<0.995'],   
+    http_req_failed:   ['rate<0.05'],   
   },
 };
 
@@ -25,7 +25,7 @@ export const options = {
 export function setup() {
   const codes = [];
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 20; i++) {
     const res = http.post(
       `${BASE_URL}/urls`,
       JSON.stringify({ original_url: 'https://www.google.com' }),
@@ -88,7 +88,7 @@ export default function (data) {
     });
   }
 
-  sleep(0.2); // 100ms between requests per VU
+  sleep(0.2); // 200ms between requests per VU
 }
 
 //Teardown-runs once after test 
