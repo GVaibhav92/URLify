@@ -208,14 +208,32 @@ X-RateLimit-Refill-Rate: 1
 | `urlify_health_check_cycles_total` | Counter | — | Completed worker cycles |
 | `urlify_health_check_duration_seconds` | Histogram | — | Worker cycle duration |
 
-### Grafana Dashboard — 11 Panels
+###  Live Grafana Dashboard Snapshot
 
-```
-Row 1:  RPS (time series)          │  HTTP Requests by Status (time series)
-Row 2:  Cache Hit vs Miss          │  Cache Hit Ratio % (gauge)  │  Rate Limited/sec
-Row 3:  Error Rate %               │  URL Health Status per code
-Row 4:  Active URLs (stat)  │  P99 Latency  │  P50 Latency  │  Health Check Duration
-```
+You can view the production monitoring dashboard here:
+
+🔗 **Public Snapshot:**
+https://snapshots.raintank.io/dashboard/snapshot/YOUR_ID
+
+This dashboard visualizes:
+
+* Requests per second (RPS)
+* Cache hit vs miss ratio
+* Error rate
+* P99 latency
+* Rate limiting behavior
+* URL health monitoring
+
+The system was load tested using **k6**, and metrics were collected via **Prometheus** and visualized using **Grafana**.
+
+### Key Metrics
+
+| Metric | Visualization |
+|--------|--------------|
+| Request Rate (RPS) | ![](screenshots/rps.png) |
+| Cache Hit Ratio | ![](screenshots/cache-hit-ratio.png) |
+| P99 Latency | ![](screenshots/latency.png) |
+| URL Health Status | ![](screenshots/health_status.png) |
 
 Key PromQL queries used:
 
