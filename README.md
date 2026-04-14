@@ -213,7 +213,7 @@ X-RateLimit-Refill-Rate: 1
 You can view the production monitoring dashboard here:
 
 🔗 **Public Snapshot:**
-https://snapshots.raintank.io/dashboard/snapshot/YOUR_ID
+https://snapshots.raintank.io/dashboard/snapshot/bLUyVnrB0cwEZwQTWh8RRaXq8jVQp4I8
 
 This dashboard visualizes:
 
