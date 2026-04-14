@@ -38,25 +38,31 @@ real backend engineering patterns used in production systems.
 ---
 ## Tech Stack
 
-Backend:
-- Go (Gin)
-- PostgreSQL
-- Redis
+### Backend
 
-Infrastructure:
-- Docker
-- Docker Compose
+![Go](https://img.shields.io/badge/Go-1.22-00ADD8?logo=go)
+![Gin](https://img.shields.io/badge/Gin-Web_Framework-00ADD8?logo=go)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?logo=postgresql)
+![Redis](https://img.shields.io/badge/Redis-7-DC382D?logo=redis)
 
-Observability:
-- Prometheus
-- Grafana
+### Infrastructure
 
-Testing:
-- k6 (load testing)
+![Docker](https://img.shields.io/badge/Docker-Containerization-2496ED?logo=docker)
+![Docker Compose](https://img.shields.io/badge/Docker--Compose-Orchestration-2496ED?logo=docker)
 
-Security:
-- JWT authentication
-- bcrypt password hashing
+### Observability
+
+![Prometheus](https://img.shields.io/badge/Prometheus-Monitoring-E6522C?logo=prometheus)
+![Grafana](https://img.shields.io/badge/Grafana-Dashboarding-F46800?logo=grafana)
+
+### Testing
+
+![k6](https://img.shields.io/badge/k6-Load_Testing-7D64FF?logo=k6)
+
+### Security
+
+![JWT](https://img.shields.io/badge/JWT-Authentication-000000?logo=jsonwebtokens)
+![bcrypt](https://img.shields.io/badge/bcrypt-Password_Hashing-blue)
 
 ---
 
@@ -403,30 +409,37 @@ Watch all 11 Grafana panels respond live during the test.
 ---
 ## Performance Characteristics
 
-Environment:
+### Load Test Environment:
 
 * Local development machine
 * Docker Compose deployment
 * Go + Redis + PostgreSQL + Prometheus + Grafana
 
-Load test configuration:
+### Load test configuration:
 
 * Tool: k6
 * Peak load: 50 virtual users
 * Test duration: ~3 minutes
 * Target endpoint: redirect service
 
-Results:
+### Benchmark Results:
 
-* Throughput: ~376 requests/sec
-* P99 latency: ~9.83 ms
-* Cache hit ratio: 99.8%
-* Error rate: < 1%
+| Metric | Value |
+|--------|------|
+| Throughput | **376 requests/sec** |
+| P99 Latency | **9.83 ms** |
+| Cache Hit Ratio | **99.8%** |
+| Error Rate | **< 1%** |
 
-Note:
+**Note:**
 
 During benchmarking, rate limits were temporarily increased to measure system throughput without artificial throttling.
 With default rate limits enabled, the system correctly enforced request limits under load.
+
+![Throughput](https://img.shields.io/badge/Throughput-376_req/s-brightgreen)
+![Latency](https://img.shields.io/badge/P99_Latency-9.83_ms-blue)
+![Cache_Hit](https://img.shields.io/badge/Cache_Hit-99.8%25-success)
+![Error_Rate](https://img.shields.io/badge/Error_Rate-<1%25-green)
 
 ---
 ## Project Structure
