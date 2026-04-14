@@ -269,12 +269,12 @@ The system was load tested using **k6**, and metrics were collected via **Promet
 
 | Metric | Visualization |
 |--------|--------------|
-| Request Rate (RPS) | ![RPS Dashboard](screenshots/rps.png) |
-| Cache Hit Ratio | ![Cache Hit Ratio](screenshots/cache-hit-ratio.png) |
-| P99 Latency | ![P99 Latency](screenshots/latency.png) |
-| URL Health Status | ![URL Health Status](screenshots/health_status.png) |
+| *Request Rate (RPS)* | ![RPS Dashboard](screenshots/rps.png) |
+| *Cache Hit Ratio* | ![Cache Hit Ratio](screenshots/cache-hit-ratio.png) |
+| *P99 Latency* | ![P99 Latency](screenshots/latency.png) |
+| *URL Health Status* | ![URL Health Status](screenshots/health_status.png) |
 
-Key PromQL queries used:
+Key PromQL queries:
 
 ```promql
 # Requests per second
