@@ -366,7 +366,11 @@ git clone https://github.com/yourusername/urlify.git
 cd urlify
 
 cp .env.example .env
-# Set a secure JWT_SECRET in .env
+
+# Update required secrets in .env:
+# - JWT_SECRET
+# - GF_SECURITY_ADMIN_PASSWORD
+# - GF_SMTP_PASSWORD
 
 docker compose up --build
 ```
@@ -380,6 +384,8 @@ docker compose up --build
 Grafana credentials are defined in the `.env` file.
 
 ⚠️ Never commit real credentials to source control.
+The `.env` file is ignored by Git and contains local secrets.
+Use `.env.example` as the configuration template.
 
 Dashboard is auto-provisioned — navigate to
 **Dashboards → urlify → urlify Production Dashboard**.
@@ -505,13 +511,13 @@ urlify/
 |---|---|---|
 | `APP_PORT` | `8080` | HTTP server port |
 | `APP_ENV` | `development` | Environment name |
-| `DB_HOST` | `localhost` | PostgreSQL host |
+| `DB_HOST` | `postgres` | PostgreSQL host |
 | `DB_PORT` | `5432` | PostgreSQL port |
 | `DB_USER` | `urlify` | PostgreSQL user |
 | `DB_PASSWORD` | — | PostgreSQL password |
 | `DB_NAME` | `urlify_db` | PostgreSQL database name |
 | `DB_SSLMODE` | `disable` | PostgreSQL SSL mode |
-| `REDIS_HOST` | `localhost` | Redis host |
+| `REDIS_HOST` | `redis` | Redis host |
 | `REDIS_PORT` | `6379` | Redis port |
 | `REDIS_PASSWORD` | — | Redis password (optional) |
 | `JWT_SECRET` | — | JWT signing secret (required) |
@@ -526,7 +532,7 @@ urlify/
 ## Docker Services
 
 ```
-docker compose up --build
+docker compose up -d --build
 
 Service       Port    Description
 ──────────────────────────────────────────
