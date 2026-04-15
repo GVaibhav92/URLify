@@ -527,6 +527,23 @@ urlify/
 | `HEALTH_CHECK_INTERVAL_SECONDS` | `300` | Worker tick interval |
 | `HEALTH_CHECK_WORKER_POOL_SIZE` | `10` | Concurrent health workers |
 
+## Grafana / Alerting Configuration 
+
+These variables configure Grafana authentication and email alert notifications.
+They are only required when running the full observability stack with Docker.
+
+| Variable | Default | Description |
+|----------|--------|-------------|
+| `GF_SECURITY_ADMIN_USER` | `admin` | Grafana admin username |
+| `GF_SECURITY_ADMIN_PASSWORD` | — | Grafana admin password |
+| `GF_SMTP_ENABLED` | `true` | Enable email notifications |
+| `GF_SMTP_HOST` | `smtp.gmail.com:587` | SMTP server address |
+| `GF_SMTP_USER` | — | SMTP username |
+| `GF_SMTP_PASSWORD` | — | SMTP app password |
+| `GF_SMTP_FROM_ADDRESS` | — | Sender email address |
+| `GF_SMTP_FROM_NAME` | `URLify Email Alerts` | Display name for alerts |
+| `GF_SMTP_SKIP_VERIFY` | `true` | Skip TLS verification (development only) |
+
 ---
 
 ## Docker Services
