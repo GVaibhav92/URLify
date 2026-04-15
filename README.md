@@ -3,7 +3,7 @@
 A fully observable, containerized URL shortener built to demonstrate
 real backend engineering patterns used in production systems.
 
-[![Go](https://img.shields.io/badge/Go-1.22-blue)](https://golang.org)
+[![Go](https://img.shields.io/badge/Go-1.25-blue)](https://golang.org)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue)](https://postgresql.org)
 [![Redis](https://img.shields.io/badge/Redis-7-red)](https://redis.io)
 [![Prometheus](https://img.shields.io/badge/Prometheus-latest-orange)](https://prometheus.io)
