@@ -372,7 +372,7 @@ cp .env.example .env
 # - GF_SECURITY_ADMIN_PASSWORD
 # - GF_SMTP_PASSWORD
 
-docker compose up --build
+docker compose up -d --build
 ```
 
 | Service | URL |
