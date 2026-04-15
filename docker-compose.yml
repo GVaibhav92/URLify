@@ -86,10 +86,13 @@ services:
 
     ports:
       - "3000:3000"
+    
+    env_file:
+    - .env
 
     environment:
-      GF_SECURITY_ADMIN_USER: admin
-      GF_SECURITY_ADMIN_PASSWORD: urlify123
+      GF_SECURITY_ADMIN_USER: ${GF_SECURITY_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD:  ${GF_SECURITY_ADMIN_PASSWORD}
       GF_USERS_ALLOW_SIGN_UP: "false"
 
       # Anonymous access
@@ -97,13 +100,13 @@ services:
       GF_AUTH_ANONYMOUS_ORG_ROLE: "Viewer"
 
        # SMTP Configuration 
-      GF_SMTP_ENABLED: "true"
-      GF_SMTP_HOST: "smtp.gmail.com:587"
-      GF_SMTP_USER: "vishuguptaa9262@gmail.com"
-      GF_SMTP_PASSWORD: "gsgi unrr fbiw ttam"
-      GF_SMTP_FROM_ADDRESS: "vishuguptaa9262@gmail.com"
-      GF_SMTP_FROM_NAME: "URLify Email Alerts"
-      GF_SMTP_SKIP_VERIFY: "true"
+      GF_SMTP_ENABLED:  ${GF_SMTP_ENABLED}
+      GF_SMTP_HOST: ${GF_SMTP_HOST}
+      GF_SMTP_USER: ${GF_SMTP_USER}
+      GF_SMTP_PASSWORD: ${GF_SMTP_PASSWORD}
+      GF_SMTP_FROM_ADDRESS: ${GF_SMTP_FROM_ADDRESS}
+      GF_SMTP_FROM_NAME: ${GF_SMTP_FROM_NAME}
+      GF_SMTP_SKIP_VERIFY:  ${GF_SMTP_SKIP_VERIFY}
 
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning
